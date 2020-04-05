@@ -544,7 +544,7 @@ if __name__ == '__main__':
 
         # train instances
         n = 1000
-        lp_dir = f'data/instances/setcover/train_{nrows}r_{ncols}c_{dens}d'
+        lp_dir = f'../data/instances/setcover/train_{nrows}r_{ncols}c_{dens}d'
         print(f"{n} instances in {lp_dir}")
         os.makedirs(lp_dir)
         filenames.extend([os.path.join(lp_dir, f'instance_{i+1}.lp') for i in range(n)])
@@ -554,7 +554,7 @@ if __name__ == '__main__':
 
         # validation instances
         n = 200
-        lp_dir = f'data/instances/setcover/valid_{nrows}r_{ncols}c_{dens}d'
+        lp_dir = f'../data/instances/setcover/valid_{nrows}r_{ncols}c_{dens}d'
         print(f"{n} instances in {lp_dir}")
         os.makedirs(lp_dir)
         filenames.extend([os.path.join(lp_dir, f'instance_{i+1}.lp') for i in range(n)])
@@ -565,7 +565,7 @@ if __name__ == '__main__':
         # small transfer instances
         n = 100
         nrows = 500
-        lp_dir = f'data/instances/setcover/transfer_{nrows}r_{ncols}c_{dens}d'
+        lp_dir = f'../data/instances/setcover/transfer_{nrows}r_{ncols}c_{dens}d'
         print(f"{n} instances in {lp_dir}")
         os.makedirs(lp_dir)
         filenames.extend([os.path.join(lp_dir, f'instance_{i+1}.lp') for i in range(n)])
@@ -576,7 +576,7 @@ if __name__ == '__main__':
         # medium transfer instances
         n = 100
         nrows = 1000
-        lp_dir = f'data/instances/setcover/transfer_{nrows}r_{ncols}c_{dens}d'
+        lp_dir = f'../data/instances/setcover/transfer_{nrows}r_{ncols}c_{dens}d'
         print(f"{n} instances in {lp_dir}")
         os.makedirs(lp_dir)
         filenames.extend([os.path.join(lp_dir, f'instance_{i+1}.lp') for i in range(n)])
@@ -587,7 +587,7 @@ if __name__ == '__main__':
         # big transfer instances
         n = 100
         nrows = 2000
-        lp_dir = f'data/instances/setcover/transfer_{nrows}r_{ncols}c_{dens}d'
+        lp_dir = f'../data/instances/setcover/transfer_{nrows}r_{ncols}c_{dens}d'
         print(f"{n} instances in {lp_dir}")
         os.makedirs(lp_dir)
         filenames.extend([os.path.join(lp_dir, f'instance_{i+1}.lp') for i in range(n)])
@@ -599,7 +599,7 @@ if __name__ == '__main__':
         n = 200
         nrows = 500
         ncols = 1000
-        lp_dir = f'data/instances/setcover/test_{nrows}r_{ncols}c_{dens}d'
+        lp_dir = f'../data/instances/setcover/test_{nrows}r_{ncols}c_{dens}d'
         print(f"{n} instances in {lp_dir}")
         os.makedirs(lp_dir)
         filenames.extend([os.path.join(lp_dir, f'instance_{i+1}.lp') for i in range(n)])
@@ -623,7 +623,7 @@ if __name__ == '__main__':
 
         # train instances
         n = 10000
-        lp_dir = f'data/instances/indset/train_{number_of_nodes}_{affinity}'
+        lp_dir = f'../data/instances/indset/train_{number_of_nodes}_{affinity}'
         print(f"{n} instances in {lp_dir}")
         os.makedirs(lp_dir)
         filenames.extend([os.path.join(lp_dir, f'instance_{i+1}.lp') for i in range(n)])
@@ -631,7 +631,7 @@ if __name__ == '__main__':
 
         # validation instances
         n = 2000
-        lp_dir = f'data/instances/indset/valid_{number_of_nodes}_{affinity}'
+        lp_dir = f'../data/instances/indset/valid_{number_of_nodes}_{affinity}'
         print(f"{n} instances in {lp_dir}")
         os.makedirs(lp_dir)
         filenames.extend([os.path.join(lp_dir, f'instance_{i+1}.lp') for i in range(n)])
@@ -640,7 +640,7 @@ if __name__ == '__main__':
         # small transfer instances
         n = 100
         number_of_nodes = 500
-        lp_dir = f'data/instances/indset/transfer_{number_of_nodes}_{affinity}'
+        lp_dir = f'../data/instances/indset/transfer_{number_of_nodes}_{affinity}'
         print(f"{n} instances in {lp_dir}")
         os.makedirs(lp_dir)
         filenames.extend([os.path.join(lp_dir, f'instance_{i+1}.lp') for i in range(n)])
@@ -649,7 +649,7 @@ if __name__ == '__main__':
         # medium transfer instances
         n = 100
         number_of_nodes = 1000
-        lp_dir = f'data/instances/indset/transfer_{number_of_nodes}_{affinity}'
+        lp_dir = f'../data/instances/indset/transfer_{number_of_nodes}_{affinity}'
         print(f"{n} instances in {lp_dir}")
         os.makedirs(lp_dir)
         filenames.extend([os.path.join(lp_dir, f'instance_{i+1}.lp') for i in range(n)])
@@ -658,7 +658,7 @@ if __name__ == '__main__':
         # big transfer instances
         n = 100
         number_of_nodes = 1500
-        lp_dir = f'data/instances/indset/transfer_{number_of_nodes}_{affinity}'
+        lp_dir = f'../data/instances/indset/transfer_{number_of_nodes}_{affinity}'
         print(f"{n} instances in {lp_dir}")
         os.makedirs(lp_dir)
         filenames.extend([os.path.join(lp_dir, f'instance_{i+1}.lp') for i in range(n)])
@@ -667,7 +667,7 @@ if __name__ == '__main__':
         # test instances
         n = 2000
         number_of_nodes = 500
-        lp_dir = f'data/instances/indset/test_{number_of_nodes}_{affinity}'
+        lp_dir = f'../data/instances/indset/test_{number_of_nodes}_{affinity}'
         print(f"{n} instances in {lp_dir}")
         os.makedirs(lp_dir)
         filenames.extend([os.path.join(lp_dir, f'instance_{i+1}.lp') for i in range(n)])
@@ -690,7 +690,7 @@ if __name__ == '__main__':
 
         # train instances
         n = 10000
-        lp_dir = f'data/instances/cauctions/train_{number_of_items}_{number_of_bids}'
+        lp_dir = f'../data/instances/cauctions/train_{number_of_items}_{number_of_bids}'
         print(f"{n} instances in {lp_dir}")
         os.makedirs(lp_dir)
         filenames.extend([os.path.join(lp_dir, f'instance_{i+1}.lp') for i in range(n)])
@@ -699,7 +699,7 @@ if __name__ == '__main__':
 
         # validation instances
         n = 2000
-        lp_dir = f'data/instances/cauctions/valid_{number_of_items}_{number_of_bids}'
+        lp_dir = f'../data/instances/cauctions/valid_{number_of_items}_{number_of_bids}'
         print(f"{n} instances in {lp_dir}")
         os.makedirs(lp_dir)
         filenames.extend([os.path.join(lp_dir, f'instance_{i+1}.lp') for i in range(n)])
@@ -710,18 +710,18 @@ if __name__ == '__main__':
         n = 100
         number_of_items = 100
         number_of_bids = 500
-        lp_dir = f'data/instances/cauctions/transfer_{number_of_items}_{number_of_bids}'
+        lp_dir = f'../data/instances/cauctions/transfer_{number_of_items}_{number_of_bids}'
         print(f"{n} instances in {lp_dir}")
-        os.makedirs(lp_dir)
         filenames.extend([os.path.join(lp_dir, f'instance_{i+1}.lp') for i in range(n)])
         nitemss.extend([number_of_items] * n)
+        os.makedirs(lp_dir)
         nbidss.extend([number_of_bids ] * n)
 
         # medium transfer instances
         n = 100
         number_of_items = 200
         number_of_bids = 1000
-        lp_dir = f'data/instances/cauctions/transfer_{number_of_items}_{number_of_bids}'
+        lp_dir = f'../data/instances/cauctions/transfer_{number_of_items}_{number_of_bids}'
         print(f"{n} instances in {lp_dir}")
         os.makedirs(lp_dir)
         filenames.extend([os.path.join(lp_dir, f'instance_{i+1}.lp') for i in range(n)])
@@ -732,7 +732,7 @@ if __name__ == '__main__':
         n = 100
         number_of_items = 300
         number_of_bids = 1500
-        lp_dir = f'data/instances/cauctions/transfer_{number_of_items}_{number_of_bids}'
+        lp_dir = f'../data/instances/cauctions/transfer_{number_of_items}_{number_of_bids}'
         print(f"{n} instances in {lp_dir}")
         os.makedirs(lp_dir)
         filenames.extend([os.path.join(lp_dir, f'instance_{i+1}.lp') for i in range(n)])
@@ -743,7 +743,7 @@ if __name__ == '__main__':
         n = 2000
         number_of_items = 100
         number_of_bids = 500
-        lp_dir = f'data/instances/cauctions/test_{number_of_items}_{number_of_bids}'
+        lp_dir = f'../data/instances/cauctions/test_{number_of_items}_{number_of_bids}'
         print(f"{n} instances in {lp_dir}")
         os.makedirs(lp_dir)
         filenames.extend([os.path.join(lp_dir, f'instance_{i+1}.lp') for i in range(n)])
@@ -768,7 +768,7 @@ if __name__ == '__main__':
 
         # train instances
         n = 1000
-        lp_dir = f'data/instances/facilities/train_{number_of_customers}_{number_of_facilities}_{ratio}'
+        lp_dir = f'../data/instances/facilities/train_{number_of_customers}_{number_of_facilities}_{ratio}'
         print(f"{n} instances in {lp_dir}")
         os.makedirs(lp_dir)
         filenames.extend([os.path.join(lp_dir, f'instance_{i+1}.lp') for i in range(n)])
@@ -778,7 +778,7 @@ if __name__ == '__main__':
 
         # validation instances
         n = 200
-        lp_dir = f'data/instances/facilities/valid_{number_of_customers}_{number_of_facilities}_{ratio}'
+        lp_dir = f'../data/instances/facilities/valid_{number_of_customers}_{number_of_facilities}_{ratio}'
         print(f"{n} instances in {lp_dir}")
         os.makedirs(lp_dir)
         filenames.extend([os.path.join(lp_dir, f'instance_{i+1}.lp') for i in range(n)])
@@ -790,7 +790,7 @@ if __name__ == '__main__':
         n = 100
         number_of_customers = 100
         number_of_facilities = 100
-        lp_dir = f'data/instances/facilities/transfer_{number_of_customers}_{number_of_facilities}_{ratio}'
+        lp_dir = f'../data/instances/facilities/transfer_{number_of_customers}_{number_of_facilities}_{ratio}'
         print(f"{n} instances in {lp_dir}")
         os.makedirs(lp_dir)
         filenames.extend([os.path.join(lp_dir, f'instance_{i+1}.lp') for i in range(n)])
@@ -801,7 +801,7 @@ if __name__ == '__main__':
         # medium transfer instances
         n = 100
         number_of_customers = 200
-        lp_dir = f'data/instances/facilities/transfer_{number_of_customers}_{number_of_facilities}_{ratio}'
+        lp_dir = f'../data/instances/facilities/transfer_{number_of_customers}_{number_of_facilities}_{ratio}'
         print(f"{n} instances in {lp_dir}")
         os.makedirs(lp_dir)
         filenames.extend([os.path.join(lp_dir, f'instance_{i+1}.lp') for i in range(n)])
@@ -812,7 +812,7 @@ if __name__ == '__main__':
         # big transfer instances
         n = 100
         number_of_customers = 400
-        lp_dir = f'data/instances/facilities/transfer_{number_of_customers}_{number_of_facilities}_{ratio}'
+        lp_dir = f'../data/instances/facilities/transfer_{number_of_customers}_{number_of_facilities}_{ratio}'
         print(f"{n} instances in {lp_dir}")
         os.makedirs(lp_dir)
         filenames.extend([os.path.join(lp_dir, f'instance_{i+1}.lp') for i in range(n)])
@@ -824,7 +824,7 @@ if __name__ == '__main__':
         n = 200
         number_of_customers = 100
         number_of_facilities = 100
-        lp_dir = f'data/instances/facilities/test_{number_of_customers}_{number_of_facilities}_{ratio}'
+        lp_dir = f'../data/instances/facilities/test_{number_of_customers}_{number_of_facilities}_{ratio}'
         print(f"{n} instances in {lp_dir}")
         os.makedirs(lp_dir)
         filenames.extend([os.path.join(lp_dir, f'instance_{i+1}.lp') for i in range(n)])
