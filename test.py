@@ -3,6 +3,8 @@ import math
 import os 
 import sys
 
+
+from data_loader import load_miplib, load_generated
 from pyscipopt import Model
 
 
@@ -205,8 +207,10 @@ def get_test_actions(heuristics_to_run, priority_or_freq, episode):
 def main():
 
 	# specify path to data
-	path = 'data/instances/facilities/train_100_100_5/'
-	instances = os.listdir(path)
+	#instances = load_generated('facilities')
+	instances = load_miplib('easy')
+
+
 
 	priority_or_freq = 'priority'
 	#priority_or_freq = 'freqofs'
@@ -218,7 +222,7 @@ def main():
 	env = Enviornment(priority_or_freq=priority_or_freq, 
 					 heuristics_to_run=heuristics_to_run)
 
-	num_episodes = 10
+	num_episodes = 7
 	instance_start = 2
 	num_instances = 2
 
@@ -227,15 +231,13 @@ def main():
 
 	for instance in instances[instance_start : instance_start + num_instances]:
 
-		f_path = path + instance
-
 		for episode in range(0, num_episodes):
 
 			# get actions
 			action = get_test_actions(heuristics_to_run, priority_or_freq, episode)
 
 			# reset and step in enviornment 
-			env.reset(f_path, seed = 0)
+			env.reset(instance, seed = 0)
 			reward = env.step(action)
 
 			rewards.append(reward)
@@ -295,4 +297,17 @@ self.action_dict_priority = {
 			'veclendiving' : 4
 		}
 
+'''
+
+'''
+
+SCIP Status        : problem is solved [optimal solution found]
+Solving Time (sec) : 63.00
+Solving Nodes      : 269
+Primal Bound       : +1.76428171427203e+04 (280 solutions)
+Dual Bound         : +1.76428171427203e+04
+Gap                : 0.00 %
+Time to solve:     [36.0, 39.0, 38.0, 40.0, 40.0, 40.0, 40.0, 63.0, 62.0, 62.0, 64.0, 63.0, 62.0, 63.0]
+Number of nodes:   [40, 40, 40, 40, 40, 40, 40, 269, 269, 269, 269, 269, 269, 269]
+Actions: [{'coefdiving': -1001000, 'fracdiving': -1003000, 'veclendiving': -1003100}, {'coefdiving': 1, 'fracdiving': 2, 'veclendiving': 3}, {'coefdiving': 1, 'fracdiving': 3, 'veclendiving': 2}, {'coefdiving': 2, 'fracdiving': 1, 'veclendiving': 3}, {'coefdiving': 2, 'fracdiving': 3, 'veclendiving': 1}, {'coefdiving': 3, 'fracdiving': 1, 'veclendiving': 2}, {'coefdiving': 3, 'fracdiving': 2, 'veclendiving': 1}, {'coefdiving': -1001000, 'fracdiving': -1003000, 'veclendiving': -1003100}, {'coefdiving': 1, 'fracdiving': 2, 'veclendiving': 3}, {'coefdiving': 1, 'fracdiving': 3, 'veclendiving': 2}, {'coefdiving': 2, 'fracdiving': 1, 'veclendiving': 3}, {'c
 '''
