@@ -7,22 +7,26 @@ from pyscipopt import Model
 
 
 
-def load_miplib(instance_type = 'easy'):
+def load_miplib(instance_type = 'easy', year = 2010):
 	'''
 		Returns file paths to all MIPLIB instance for a given category.
 		Params:
 			instance_type - type of instance (easy, hard, or open)
+			year - miplib year
 		Returns:
 			a list of the path to every file. 
 	'''
-	file_path = 'data/miplib_2017/' + instance_type + '.txt'
+
+	year = str(year)
+	lib_path = 'data/miplib_' + year + '/' 
+	file_path = lib_path + instance_type + '.txt'
 
 	with open(file_path, 'r') as f:
 		files = f.readlines()
 
-	files = list(map(lambda x: x[0:-2], files)) # remove newline
+	files = list(map(lambda x: x[:-1], files)) # remove newline
 
-	file_paths = list(map(lambda x: 'data/miplib_2017/collection/' + x, files))
+	file_paths = list(map(lambda x: lib_path + 'collection/' + x, files))
 
 	return file_paths
 
@@ -54,38 +58,36 @@ def load_generated(problem_type = 'facilities'):
 
 def main():
 	
-	fp = 'data/miplib_2017/gz_test.mps'
-	model = Model()
-	model.readProblem(fp)
-
-	'''
+	
 	# test reading of miplib instances
 	print('Testing miplib loader...')
 
 	miplib_instances = load_miplib('easy')
-	instance = miplib_instances[0]
 
-	print('  Reading instance', instance)
-	model = Model()
-	model.readProblem(instance)
+	for instance in miplib_instances[0:10]:
+
+		print('  Reading instance', instance)
+		model = Model()
+		model.readProblem(instance)
 
 	print('  Success')
 
 
 	# test reading of generated instances
+	'''
 	print('Testing generated loader...')
 	generated_instances = load_generated('facilities')
 	instance = generated_instances[0]
 
 	print('  Reading instance', instance)
 	model = Model()
-	#model.readProblem(instance)
+	model.readProblem(instance)
 
 	print('  Success')
-	#print(miplib_instances)
-	#print(generated_instances)
 	'''
 
+	return
+	
 if __name__ == '__main__':
 	main()
 	

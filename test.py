@@ -2,7 +2,7 @@ import numpy as np
 import math
 import os 
 import sys
-
+import pickle
 
 from data_loader import load_miplib, load_generated
 from pyscipopt import Model
@@ -11,11 +11,12 @@ from pyscipopt import Model
 
 class Enviornment(object):
 
-	def __init__(self, priority_or_freq, heuristics_to_run):
+	def __init__(self, priority_or_freq, heuristics_to_run, time_limit=600):
 		'''
 		'''
 
 		self.priority_or_freq = priority_or_freq
+		self.time_limit = time_limit
 
 		self.heuristics = ['actconsdiving' ,'bound' ,'clique' ,'coefdiving' ,'completesol' ,'conflictdiving' ,'crossover',
 						   'dins' ,'distributiondiving' ,'dualval' ,'farkasdiving' ,'feaspump' ,'fixandinfer' ,'fracdiving' ,
@@ -30,6 +31,7 @@ class Enviornment(object):
 
 		self.state = None
 		self.model = None
+
 
 		return
 
@@ -46,6 +48,15 @@ class Enviornment(object):
 		for heur_to_disable in self.heuristics_to_disable:
 			self.model.setIntParam('heuristics/' + heur_to_disable + '/freqofs', 65534)
 			self.model.setIntParam('heuristics/' + heur_to_disable + '/priority', -100000)
+
+		return
+
+
+	def set_time_limit(self):
+		'''
+		'''
+
+		self.model.setRealParam('limits/time', self.time_limit)
 
 		return
 
@@ -97,9 +108,11 @@ class Enviornment(object):
 		
 		reward_ts = self.model.getSolvingTime()
 		reward_nn = self.model.getNNodes()
+		gap = self.model.getGap()
 
 		reward = {'time_to_solve' : reward_ts,
-				  'number_of_nodes' : reward_nn}
+				  'number_of_nodes' : reward_nn,
+				  'gap' : gap}
 
 		return reward
 
@@ -116,6 +129,7 @@ class Enviornment(object):
 
 	def step(self, action):
 
+		'''
 		self.disable_heuristics()
 
 		# set priorities
@@ -123,7 +137,8 @@ class Enviornment(object):
 			self.set_priority(action)
 		else:
 			self.set_freqofs(action)
-		
+		'''
+		self.set_time_limit()
 
 		self.model.optimize()
 
@@ -209,8 +224,7 @@ def main():
 	# specify path to data
 	#instances = load_generated('facilities')
 	instances = load_miplib('easy')
-
-
+	time_limit = 600
 
 	priority_or_freq = 'priority'
 	#priority_or_freq = 'freqofs'
@@ -220,14 +234,16 @@ def main():
 
 	# init environment
 	env = Enviornment(priority_or_freq=priority_or_freq, 
-					 heuristics_to_run=heuristics_to_run)
+					 heuristics_to_run=heuristics_to_run, 
+					 time_limit=time_limit)
 
-	num_episodes = 7
-	instance_start = 2
-	num_instances = 2
+	num_episodes = 1
+	instance_start = 0
+	num_instances = len(instances)
 
 	rewards = []
 	actions = []
+	d = {}
 
 	for instance in instances[instance_start : instance_start + num_instances]:
 
@@ -243,12 +259,18 @@ def main():
 			rewards.append(reward)
 			actions.append(action)
 
+			d[instance] = rewards
+
 	reward_ts = list(map(lambda x: x['time_to_solve'], rewards))
 	reward_nn = list(map(lambda x: x['number_of_nodes'], rewards))
 
 	print('Time to solve:    ', reward_ts)
 	print('Number of nodes:  ', reward_nn)
 	print('Actions:', actions)
+
+
+	with open('scip_default_results.pickle', 'wb') as p:
+		pickle.dump(d, p)
 
 
 if __name__ == '__main__':
