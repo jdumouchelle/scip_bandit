@@ -1,0 +1,5 @@
+# ignore data files
+*.mps
+__pycache__/
+papers/
+*.pickle
