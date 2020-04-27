@@ -4,94 +4,23 @@ import os
 import sys
 import pickle
 
+from data_loader import *
 
-def get_scip_default(heur, priority_or_freq):
+
+def get_scip_results_path(instance, priority_or_freq, action, seed, prefix = 'results/'):
 	'''
-		Returns default scip parameters for actions that we are considering in the 
-		MDP.  
-	'''
-
-	if heur == 'coefdiving' and priority_or_freq == 'priority':
-		return -1001000
-
-	elif heur == 'fracdiving' and priority_or_freq == 'priority':
-		return -1003000
-
-	elif heur == 'veclendiving' and priority_or_freq == 'priority':
-		return -1003100
-
-	elif heur == 'coefdiving' and priority_or_freq == 'freq':
-		return -1
-
-	elif heur == 'fracdiving' and priority_or_freq == 'freq':
-		return 10
-
-	elif heur == 'veclendiving' and priority_or_freq == 'freq':
-		return 10
-
-	else:
-		raise Exception('SCIP default not defined')
-
-
-
-def get_test_actions(heuristics_to_run, priority_or_freq, episode):
-	'''
-		Gets test 
-	'''
-
-	action = {}
-
-	if priority_or_freq == 'freq':
-		for heur_to_run in heuristics_to_run:
-
-			action_episode_dict = {
-				0 : get_scip_default(heur_to_run, priority_or_freq), # scip default
-				1 : 1,
-				2 : 2,
-				3 : 5,
-				4 : 20,
-				5 : 30, 
-				6 : -1, # don't run
-			}
-
-			action[heur_to_run] = action_episode_dict[episode]
-
-	else:
-		action_dict_priority = {
-			0 : {'coefdiving' : -1,
-				   'fracdiving' : -1,
-				   'veclendiving' : -1},
-			1 : {'coefdiving' : 1,
-				   'fracdiving' : 2,
-				   'veclendiving' : 3},
-			2 : {'coefdiving' : 1,
-			       'fracdiving' : 3,
-			       'veclendiving' : 2},
-			3 : {'coefdiving' : 2,
-				   'fracdiving' : 1,
-				   'veclendiving' : 3},
-			4 : {'coefdiving' : 2,
-				   'fracdiving' : 3,
-				   'veclendiving' : 1},
-			5 : {'coefdiving' : 3,
-			       'fracdiving' : 1,
-				   'veclendiving' : 2},		
-			6 : {'coefdiving' : 3,
-			       'fracdiving' : 2,
-			       'veclendiving' : 1}
-		}
-
-		action = action_dict_priority[episode]
-
-	return action
-
-
-
-def get_scip_write_path(instance, priority_or_freq, action, seed):
-	'''
+		Gets the path that the scip results should be written to.
+		Params:
+			instance - file path to the instances 
+			priority_or_freq - the specified enviornment, i.e. "priority" or "freq"
+			action - the dictionary specifying the action
+			seed - the seed
+			prefix - the path to where the data is located.  
+		Returns:
+			the path as a string
 	'''
 	instance_name = instance.split('/')[-1].split('.')[0]
-	write_path = 'results/' + instance_name + '_' + priority_or_freq + '_seed' + str(seed) + '_'
+	write_path = prefix + instance_name + '_' + priority_or_freq + '_seed' + str(seed) + '_'
 	for heur, val in action.items():
 		write_path += heur + '_' + str(val)
 	write_path += '.txt'
@@ -99,13 +28,53 @@ def get_scip_write_path(instance, priority_or_freq, action, seed):
 	return write_path
 
 
-def get_rewards_write_path(instance, priority_or_freq, action, seed):
+def get_rewards_path(instance, priority_or_freq, action, seed, prefix = 'rewards/'):
 	'''
+		Gets the path to read of write rewards to with respect to a given set of parameters.
+		Params:
+			instance - file path to the instances 
+			priority_or_freq - the specified enviornment, i.e. "priority" or "freq"
+			action - the dictionary specifying the action
+			seed - the seed
+			prefix - the path to where the data is located.  
+		Returns:
+			the path as a string
 	'''
 	instance_name = instance.split('/')[-1].split('.')[0]
-	write_path = 'rewards/' + instance_name + '_' + priority_or_freq + '_seed' + str(seed) + '_'
+	write_path = prefix + instance_name + '_' + priority_or_freq + '_seed' + str(seed) + '_'
 	for heur, val in action.items():
 		write_path += heur + '_' + str(val)
 	write_path += '.pickle'
 
 	return write_path
+
+
+
+def get_miplib_2010_2017_intersection(max_rows, max_cols):
+	'''
+		Loads the intersections of MIPLIB easy, benchmark instances from MIPLIB 
+		2010 and 2017.  
+		Params:
+			max_rows - the maximum number of rows to include in an instance
+			max_cols - the maximum number of columns to include in an instance.  
+		Returns:
+			a list containing the union of file paths to instances. 
+	'''
+	data_loader_2010 = MIPLib2010Loader(max_rows = max_rows, max_cols = max_cols)
+	instances_2010 = data_loader_2010.get_instances()
+
+	data_loader_2017 = MIPLib2017Loader(max_rows = max_rows, max_cols = max_cols)
+	instances_2017 = data_loader_2017.get_instances()
+
+	instance_names_2010 = list(map(lambda x: x[0], instances_2010))
+	instance_names_2017 = list(map(lambda x: x[0], instances_2017))
+
+	unique_2010_instances = list(map(lambda x: x.replace('miplib_2010', 'miplib_2017'), instance_names_2010))
+	unique_2010_instances = list(filter(lambda x: x not in instance_names_2017, unique_2010_instances) )
+	unique_2010_instances = list(map(lambda x: x.replace('miplib_2017', 'miplib_2010'), unique_2010_instances))
+
+	instances_2010_filtered = list(filter(lambda x: x[0] in unique_2010_instances, instances_2010))
+
+	instances = instances_2017 + instances_2010_filtered
+
+	return instances
