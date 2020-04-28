@@ -7,8 +7,6 @@ class Reward(object):
 			Constructor for reward class.  This class simply compute and stores several rewards which can 
 			be used in training the RL algorithm.  
 		'''
-
-
 		self.time_to_solve = model.getTotalTime()
 		self.number_of_nodes = model.getNNodes()
 		self.primal_dual_gap = model.getGap()

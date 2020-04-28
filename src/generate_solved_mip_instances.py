@@ -41,7 +41,7 @@ def generate_data_offline(
 	'''
 
 	# load instances
-	instances = get_miplib_2010_2017_intersection(max_rows, max_cols)
+	instances = get_miplib_2010_2017_instances(max_rows, max_cols)
 
 	# init environment
 	time_limit = 60 * time_in_mins
@@ -71,11 +71,11 @@ def generate_data_offline(
 				reward_write_path = get_rewards_path(instance, priority_or_freq, action, seed, prefix = rewards_path_prefix)
 
 				# skip if data already exists
-				if os.path.exists(write_path):
-					print('Skipping:', write_path)
+				if os.path.exists(result_write_path):
+					print('Skipping:', instance)
 					continue
 	
-				print('Running:', write_path)
+				print('Running:', instance)
 
 				# reset and step in enviornment 
 				state = env.reset(instance, seed = seed)
@@ -116,4 +116,14 @@ def generate_data_offline(
 
 
 if __name__ == '__main__':
-	generate_data_offline()
+
+	parser = argparse.ArgumentParser(description='Generate data for use in contextual bandit.  Each instance will be run for the specified number of minutes.')
+	parser.add_argument('--minutes', type=int, help='Number of minutes to solve each MIP instance for.', default=5)
+	args = parser.parse_args()
+	
+	print('Running each MIP instances for', args.minutes, 'minutes')
+
+	scip_results_path_prefix = '../solved_mip_results/results_' + str(args.minutes) + '_min/'
+	rewards_path_prefix = '../solved_mip_results/rewards_' + str(args.minutes) + '_min/'
+
+	generate_data_offline(time_in_mins = args.minutes, scip_results_path_prefix=scip_results_path_prefix, rewards_path_prefix=rewards_path_prefix)

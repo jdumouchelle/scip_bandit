@@ -50,7 +50,7 @@ def get_rewards_path(instance, priority_or_freq, action, seed, prefix = '../solv
 
 
 
-def get_miplib_2010_2017_intersection(max_rows, max_cols):
+def get_miplib_2010_2017_instances(max_rows, max_cols):
 	'''
 		Loads the intersections of MIPLIB easy, benchmark instances from MIPLIB 
 		2010 and 2017.  
@@ -78,3 +78,4 @@ def get_miplib_2010_2017_intersection(max_rows, max_cols):
 	instances = instances_2017 + instances_2010_filtered
 
 	return instances
+
