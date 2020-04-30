@@ -1,0 +1,1 @@
+This folder contains the data collected from solved MIP instances.  It includes several potential rewards as well as state and instance information.  The results folders contain the SCIP log files solved MIP. 
