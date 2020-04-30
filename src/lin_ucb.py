@@ -24,7 +24,7 @@ from reward import Reward
 class LinUCB(object):
     
     
-    def __init__(self, actions, state_dim, alpha = 0.1):
+    def __init__(self, actions, state_dim, alpha):
         '''
             actions - a list of the actions as strings.
             state_dim - the state dimension of the problem.

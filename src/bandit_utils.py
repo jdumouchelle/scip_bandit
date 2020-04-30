@@ -59,12 +59,12 @@ def get_instances(actions = [{'veclendiving' : -1}, {'veclendiving' : 1}, {'vecl
                     reward = pickle.load(p)
                     
                 # skip instances if no primal bound was found
-                if np.abs(reward['primal_integral'] - max_primal_integral) < 0.001:
+                if reward['primal_integral']  > max_primal_integral - 0.001:
                     continue
                     
                 # add instance if instance was solved easily (under min_time_to_solve)
                 if reward['time_to_solve'] < min_time_to_solve or instance in instances_to_be_removed:
-                    instances_to_be_remove.append(instance)
+                    instances_to_be_removed.append(instance)
                     continue
                     
                 # add instance, state to dict if not already in
@@ -75,6 +75,32 @@ def get_instances(actions = [{'veclendiving' : -1}, {'veclendiving' : 1}, {'vecl
     return instances_to_be_included
 
 
+
+def get_solved_mip_result_dict(instances, priority_or_freq, actions, action_values, seeds, reward_path_prefix):
+    '''
+    '''
+    solved_mip_result_dict = {}
+
+    for instance in instances.keys():
+
+        solved_mip_result_dict[instance] = {}
+
+        for action, action_value in zip(actions, action_values):
+
+            solved_mip_result_dict[instance][action_value] = {}
+            
+            for seed in seeds:
+                
+                # get primal integral
+                reward_path = get_rewards_path(instance, priority_or_freq, action, seed, prefix=reward_path_prefix)
+                with open(reward_path, 'rb') as p:
+                    reward = pickle.load(p)
+                primal_integral = reward['primal_integral']
+
+                # store primal integral in dict
+                solved_mip_result_dict[instance][action_value][seed] = - primal_integral
+
+    return solved_mip_result_dict
 
 def get_train_test_split(instances, tr_te_split_ratio=0.8, seed = 0):
     '''
@@ -130,12 +156,12 @@ def get_random_instance(instances):
 
 
 def take_action_on_instance(
+    solved_mip_result_dict,
     instance, 
     action, 
     seed=None, 
     priority_or_freq = 'freq', 
-    heuristic = 'veclendiving', 
-    reward_path_prefix='../soived_mip_instance/rewards_5_min'):
+    heuristic = 'veclendiving'):
     '''
         Takes action on instance.
         Params:
@@ -150,18 +176,7 @@ def take_action_on_instance(
     if seed is None:
         seed = np.random.randint(5)
         
-    # cast acton tp doct
-    action_dict = {
-        heuristic : action
-    }
-    
-    # get reward assosiated with action/instance/seed
-    reward_path = get_rewards_path(instance, priority_or_freq, action_dict, seed, prefix=reward_path_prefix)
-    with open(reward_path, 'rb') as p:
-        reward = pickle.load(p)
-
-    return - reward['primal_integral']
-
+    return solved_mip_result_dict[instance][action][seed]
 
 
 def get_scaler_normalize_train_states(train_instances):
@@ -183,7 +198,7 @@ def get_scaler_normalize_train_states(train_instances):
     return scaler
 
 
-def compute_scip_action_reward(instances, reward_path_prefix, seeds=[0,1,2,3,4]):
+def compute_scip_action_reward(instances, solved_mip_result_dict, seeds=[0,1,2,3,4]):
     '''
         Computes the optimal reward for each instance by checking all actions.  
         Params:
@@ -203,7 +218,7 @@ def compute_scip_action_reward(instances, reward_path_prefix, seeds=[0,1,2,3,4])
         # compute reward across all instances
         scip_reward = 0
         for seed in seeds:
-            reward = take_action_on_instance(instance, scip_action, seed, reward_path_prefix=reward_path_prefix)
+            reward = take_action_on_instance(solved_mip_result_dict, instance, scip_action, seed)
             scip_reward += reward
         scip_reward = scip_reward / len(seeds)
             
@@ -214,7 +229,7 @@ def compute_scip_action_reward(instances, reward_path_prefix, seeds=[0,1,2,3,4])
     return scip_avg_reward
 
 
-def compute_optimal_action_reward(instances, actions, reward_path_prefix, seeds=[0,1,2,3,4]):
+def compute_optimal_action_reward(instances, actions, solved_mip_result_dict, seeds=[0,1,2,3,4]):
     '''
         Computes the optimal reward for each instance by checking all actions.  
         Params:
@@ -237,7 +252,7 @@ def compute_optimal_action_reward(instances, actions, reward_path_prefix, seeds=
             # compute reward across all instances
             instance_action_reward = 0
             for seed in seeds:
-                reward = take_action_on_instance(instance, action, seed, reward_path_prefix=reward_path_prefix)
+                reward = take_action_on_instance(solved_mip_result_dict, instance, action, seed)
                 instance_action_reward += reward
             instance_action_reward = instance_action_reward / len(seeds)
             
@@ -254,7 +269,7 @@ def compute_optimal_action_reward(instances, actions, reward_path_prefix, seeds=
 
 
 
-def eval_on_all(bandit, instances, reward_path_prefix, seeds = [0,1,2,3,4]):
+def eval_on_all(bandit, instances, solved_mip_result_dict, seeds = [0,1,2,3,4]):
     '''
         Greedily evaluates the bandit on all specified instances.  The evaluation is run across
         all seeds.
@@ -275,7 +290,7 @@ def eval_on_all(bandit, instances, reward_path_prefix, seeds = [0,1,2,3,4]):
             state_as_arr = np.array(list(state.values()))
 
             action = bandit.get_action(state_as_arr)
-            reward = take_action_on_instance(instance, action, seed, reward_path_prefix=reward_path_prefix)
+            reward = take_action_on_instance(solved_mip_result_dict, instance, action, seed)
 
             ep_reward += reward
         avg_ep_reward = ep_reward / len(seeds)
@@ -286,4 +301,15 @@ def eval_on_all(bandit, instances, reward_path_prefix, seeds = [0,1,2,3,4]):
     
     return avg_reward, actions
 
+
+def scale_reward(reward, max_primal_integral):
+    '''
+        scales the rewards between 0 and 1.
+        Params:
+            reward - the true observered reward.
+            max_primal_integral - the maximum value for a primal integral, which is defined through the time limit.  
+    '''
+    scaled_reward = reward / max_primal_integral + 1
+
+    return scaled_reward
 

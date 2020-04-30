@@ -50,6 +50,27 @@ def get_rewards_path(instance, priority_or_freq, action, seed, prefix = '../solv
 
 
 
+def get_primal_integral_path(instance, priority_or_freq, action, seed, prefix = '../solved_mip_results/results_5_min/'):
+	'''
+		Gets the path that the primal integral results are written to.
+		Params:
+			instance - file path to the instances 
+			priority_or_freq - the specified enviornment, i.e. "priority" or "freq"
+			action - the dictionary specifying the action
+			seed - the seed
+			prefix - the path to where the data is located.  
+		Returns:
+			the path as a string
+	'''
+	instance_name = instance.split('/')[-1].split('.')[0]
+	write_path = prefix + instance_name + '_' + priority_or_freq + '_seed' + str(seed) + '_'
+	for heur, val in action.items():
+		write_path += heur + '_' + str(val)
+	write_path += '.pickle'
+
+	return write_path
+
+
 def get_miplib_2010_2017_instances(max_rows, max_cols):
 	'''
 		Loads the intersections of MIPLIB easy, benchmark instances from MIPLIB 
