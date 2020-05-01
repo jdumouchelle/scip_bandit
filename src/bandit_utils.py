@@ -289,7 +289,8 @@ def eval_on_all(bandit, instances, solved_mip_result_dict, seeds = [0,1,2,3,4]):
         for seed in seeds:
             state_as_arr = np.array(list(state.values()))
 
-            action = bandit.get_action(state_as_arr)
+            # take greedy action 
+            action = bandit.get_best_action(state_as_arr)
             reward = take_action_on_instance(solved_mip_result_dict, instance, action, seed)
 
             ep_reward += reward
